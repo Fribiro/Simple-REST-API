@@ -11,7 +11,7 @@ app.use(bodyParser.urlencoded({extended: false}))
 app.use(express.static('./public'))
 
 //morgan gives us logs of what our requests are doing. use short for brief details and combined for a detailed description
-app.use(morgan('combined'))
+app.use(morgan('short'))
 
 const connection = mysql.createConnection({
   host: 'localhost',
@@ -62,8 +62,8 @@ app.post('/patient_create', (req, res) => {
   const location = req.body.County
   const status = req.body.Severity
 
-  const queryString = 'INSERT INTO `patients`(`Id`,`Name`, `County`, `Severity`) VALUES (?, ?)'
-  connection.query(queryString, [id, fname, location, status], (err, rows, fields) => {
+  const queryString = 'INSERT INTO `patients`(`Id`,`Name`, `County`, `Severity`) VALUES (?, ?, ?, ?)'
+  connection.query(queryString, [id, fname, location, status], (err, results, fields) => {
     if (err) {
       console.log('Failed to insert new patient: ' + err)
       res.sendStatus(500)
@@ -74,3 +74,12 @@ app.post('/patient_create', (req, res) => {
   })
   
 })
+
+/*app.delete('/patients/:id',(req,res)=>{
+  connection.query('DELETE FROM patients WHERE Id = ?',[req.params.id],(err,row,fields)=>{
+     if(!err)
+      res.status('Deleted successfully.', row.deleteId);
+      else
+      console.log(err);
+     });
+});*/
